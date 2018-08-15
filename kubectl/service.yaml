@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service
+  name: myfirst-service
 spec:
   selector:
-    app: nginx
+    app: simple-web
   type: NodePort
   ports:
    -  protocol: TCP
