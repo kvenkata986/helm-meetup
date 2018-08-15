@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
       - name: myfirst-container
-        image: kvenkata986/helm:1.0
+        image: kvenkata986/welcome:1.0
         ports:
         - containerPort: 80
