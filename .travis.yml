@@ -12,11 +12,18 @@ before_install:
 - w
 - uname -a
 
+before_install:
+  - docker build -t kvenkata986/welcome images/helm-meetup/.
+  - w
+  - uname -a
+  - ifconfig
+
+script:
+  - docker images kvenkata986/welcome 
+
+
 after_success:
-  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - export REPO=kvenkata986/welcome
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker build -f Dockerfile -t $REPO:$COMMIT images/helm-meetup/.
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $REPO
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push kvenkata986/welcome;
+    fi
