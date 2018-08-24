@@ -1,11 +1,23 @@
 sudo: required
-
-language: ruby
-
+language: go
 services:
-  - docker
+- docker
+
+env:
+  global:
+  - secure: xI8FMsnxcP5S+UWQsXavNsLcag0pevj2yHven0/Z9c2axrUrod8OepyM+iqoViJW4mTTL+tZjJdlV7uM6apoDwd4ljscseMwz/qkklJNxSYUTcAbIQBmJ5jVQkpO0n4HWySCl/7GJ3fSbKq7uD2/gA4rocbR/iySWE5ju9ww3SZWum9PXvmAAlkVnGfCHzRbU3DckS1n8ygkEbAbhV3+DjxyxzeoOgmFFhs5/4dk/B7b4J2ql+tDQJi9bC7CMEg/wPf1CJsDllhYXZ36oQBkq0F2fgQzbblf9BwzFMWfxrTkV8eeMtXzBskMBkGJYFqjzN1vHs886ACaVRlvxE1xcJtYW2HwaKXvO1pSmxG1hMJLvcyszTW2sV1ZgviJ8K1BYKqg2WUp6YF66D/ct3ligUqlrgOQjapJMROPtKllLfVWtgaz7rQsg5bYJb9cxuePd4qjccedcmH4InlqLGrKZwyZqDP8DfKFZM2NZChrsc3vIWRjCXks0+9/U45q12awrFYzcrtyKSW5CQJvkjX+DLIvsTUxDCJbh17kPRw1ddjnoUnBgv1pz3HCuJTuwB2OxmQjIY977zGIsd5ip7/1GMXjQwB00VF3jNIqXPYjUxta7fSeK96uEC2bYd2gGY3Oyr1NfnVk4VIJyRAgv5RsEL9M2iR29y5JlvZ7PrKl+QE=
+  - secure: fVyvsPDNCfmCuqX5fGb6TJx339vJ7QRsSi+MR20iaCQ8JhlKYWFaOfMdKPmAr/sJgj6zJSrz4IJhoD+kQQtH3SjTxq/zTHAaqBv4h4HU/f73rzjtPxoJGhg8XrSJZaXh1ZdhoDi5GtgOcCvrVlZOgZAfoH230WBxMERo/bP3HBnh3k7L0aflbj+I1Q9FvmNZbh/zg8EvVxth7o/6XQMbgdWD5hYI8ZWOpoORSSLRC/tYJT2JS1Logh8GhTmaku4YGD4cCTnsponnuYQWccXVz1e/p1xxQeZvhaqVszguaL++3Pb0jmvDpKZN94zKGi4vdbk0ZxMWFwWD75VCuFYkx4iQuXX4qDL4K+25qFVbmtr3oBEdKqjKayPfRqx4CrHRaLLW8XIOrt5dpuaUDtSCgamCl/Oqr4509x6CnK/EjBGALoyOVdC51owAZZuFPScRW0NOhkEK4dA6x8sG8ZHSyBa1JZK1uB47RgTdWbVNQbiVON9KuFZ3KpCGHaoi8OejCgti4JuoT9cNOlrsYe448l1lFSXryHiwpqxQEfxSssVWbv3YyCT5slVpuJo1JgF7Zq4ayR6XOpdXh3FWAq8XWtemc8//qNeeo4YUwFNRCAGeKbK8D4pNprYqYxusPIqTVFnIc2UiSy1Sq4iBKtF3JzENLTv6cyc3AdJc+/8qXMc=
+  - secure: ZzPSq8REcFR/VnfpsO5zboJsOJLQzS6g7rfTQmwcW4GEQr4T1OZM0UwJkfZeYUVsr+na85bY2eCBSAcmRcMYaaByHGv6k2thPP4+udwF3Xzy+WGg+Et37ZwyK2lYaUY182RCQB/DiDl0AH51PCQE47mIWLuivRAXZ2hpmfAgo2sJBMlhe6oGU+3rPByFT9o8LLxghCHsSLS0jamZSKO497CYjczT3Ynopbx+/p9d/s+rEbOxrsL5zWDbpUVR085ZQ1jkFpt1ZpYGMghu4gX/za38yg6K29yzgwYyWWlsWFk4IzsxSMcRsi1m64qNfSg8DS0fzaaOUP3A/o5qfRYPiQocV+XpKEOpqoXfPDHX29asfiqz3sjuD6bJir5ZTzNVQ8lNRuv4l0cOL4KJos/0kESLxhgN39XItfzJYXTwcFyVM6GE4r/b3TZNIqfOIDcBMbJ8LfAgnyMSTgY8mb5Q89Hlja9oyBHm0KN7OxEDkdjhBKMdJ5QJC2KiS0+bsmdIAim+UFKg1VUS+PojctrmShqk2fsAPAmHRswpfJDb6yn24h+LXE7SgmWpBW9AMJMk64DysqwdAJdY7OrS85W5XwuYfGLGOEEx/JRWOT/z+XEzMOjmrtWKjbtqgOcwRNBmiw/6iiIB9XqlO4M4wcZPjQw+ihEenwveT/nSGs08GIU=
 
 before_install:
-  - docker build -t kvenkata986/welcome images/helm-meetup/.
-  - docker run -d -p 127.0.0.1:80 kvenkata986/welcome /bin/sh -c "cat /usr/share/nginx/html/index.html"
-  - docker ps -a
+- w
+- uname -a
+
+after_success:
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export REPO=kvenkata986/welcome
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -f Dockerfile -t $REPO:$COMMIT images/helm-meetup/.
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
