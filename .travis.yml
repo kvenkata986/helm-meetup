@@ -3,6 +3,9 @@ sudo: required
 services:
 - docker
 
+env:
+- CHANGE_MINIKUBE_NONE_USER=true
+
 before_install:
   - docker build -t kvenkata986/welcome images/helm-meetup/.
 
