@@ -14,6 +14,6 @@ script:
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login --email="$DOCKER_EMAIL" --username="$DOCKER_USER" --password="$DOCKER_PASS";
+    docker login  --username="$DOCKER_USER" --password="$DOCKER_PASS";
     docker push kvenkata986/welcome;
     fi
