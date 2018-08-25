@@ -5,17 +5,17 @@ services:
 env:
 - CHANGE_MINIKUBE_NONE_USER=true
 
-bulid_docker:
+script:
   - docker build -t kvenkata986/welcome images/helm-meetup/.
 
-push_docker:
+before_install:
 - docker images kvenkata986/welcome 
 - if [ "$TRAVIS_BRANCH" == "master" ]; then
   docker login  --username="$DOCKER_USER" --password="$DOCKER_PASS";
   docker push kvenkata986/welcome;
   fi
 
-install_kubernetes:
+install:
 # Download kubectl, which is a requirement for using minikube.
 - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 # Download minikube.
@@ -26,11 +26,9 @@ install_kubernetes:
 # Wait for Kubernetes to be up and ready.
 - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl get nodes -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1; done
 
-script:
+after_success:
 - kubectl cluster-info
 # Verify kube-addon-manager.
 # Wait for kube-dns to be ready.
 - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n kube-system get pods -lk8s-app=kube-dns -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for kube-dns to be available"; kubectl get pods --all-namespaces; done
-
-after_success:
 - kubectl get nodes
