@@ -2,11 +2,6 @@ sudo: required
 services:
 - docker
 
-
-before_install:
-- w
-- uname -a
-
 before_install:
   - docker build -t kvenkata986/welcome images/helm-meetup/.
   - w
