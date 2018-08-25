@@ -5,17 +5,17 @@ services:
 env:
 - CHANGE_MINIKUBE_NONE_USER=true
 
-script:
+before_install:
   - docker build -t kvenkata986/welcome images/helm-meetup/.
 
-before_install:
+script:
 - docker images kvenkata986/welcome 
 - if [ "$TRAVIS_BRANCH" == "master" ]; then
   docker login  --username="$DOCKER_USER" --password="$DOCKER_PASS";
   docker push kvenkata986/welcome;
   fi
 
-install:
+after_script:
 # Download kubectl, which is a requirement for using minikube.
 - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 # Download minikube.
