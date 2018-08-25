@@ -5,17 +5,17 @@ services:
 env:
 - CHANGE_MINIKUBE_NONE_USER=true
 
-before_install:
+bulid_docker:
   - docker build -t kvenkata986/welcome images/helm-meetup/.
 
-script:
+push_docker:
 - docker images kvenkata986/welcome 
 - if [ "$TRAVIS_BRANCH" == "master" ]; then
   docker login  --username="$DOCKER_USER" --password="$DOCKER_PASS";
   docker push kvenkata986/welcome;
   fi
 
-before_script:
+install_kubernetes:
 # Download kubectl, which is a requirement for using minikube.
 - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 # Download minikube.
@@ -29,14 +29,8 @@ before_script:
 script:
 - kubectl cluster-info
 # Verify kube-addon-manager.
-# kube-addon-manager is responsible for managing other kubernetes components, such as kube-dns, dashboard, storage-provisioner..
-- JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n kube-system get pods -lcomponent=kube-addon-manager -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for kube-addon-manager to be available"; kubectl get pods --all-namespaces; done
 # Wait for kube-dns to be ready.
 - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n kube-system get pods -lk8s-app=kube-dns -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for kube-dns to be available"; kubectl get pods --all-namespaces; done
-# Create example Redis deployment on Kubernetes.
-- kubectl run travis-example --image=redis --labels="app=travis-example"
-# Make sure created pod is scheduled and running.
-- JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n default get pods -lapp=travis-example -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for travis-example deployment to be available"; kubectl get pods -n default; done
 
 after_success:
 - kubectl get nodes
