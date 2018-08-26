@@ -8,22 +8,22 @@ env:
 
 before_install:
 - uname -a
-- docker run -d -t --name nsenter ubuntu:14.04
-- sleep 15
-- docker ps -a
-- docker exec -d -t nsenter apt-get update
-- docker ps -a
-- sleep 15
-- docker ps -a
-- docker exec -d -t nsenter apt-get -y install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf autoconf automake autopoint libtool
-- docker ps -a
-- sleep 40
-- docker ps -a
-- docker exec -d -t nsenter /usr/bin/git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
-- docker ps -a
-- docker exec -d -t nsenter cd util-linux/; ./autogen.sh; ./configure --without-python --disable-all-programs --enable-nsenter; make
-- docker cp nsenter:/util-linux/nsenter /usr/local/bin/
-- docker cp nsenter:/util-linux/bash-completion/nsenter /etc/bash_completion.d/nsenter
+#- docker run -d -t --name nsenter ubuntu:14.04
+#- sleep 15
+#- docker ps -a
+#- docker exec -d -t nsenter apt-get update
+#- docker ps -a
+#- sleep 15
+#- docker ps -a
+#- docker exec -d -t nsenter apt-get -y install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf autoconf automake autopoint libtool
+#- docker ps -a
+#- sleep 40
+#- docker ps -a
+#- docker exec -d -t nsenter /usr/bin/git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
+#- docker ps -a
+#- docker exec -d -t nsenter cd util-linux/; ./autogen.sh; ./configure --without-python --disable-all-programs --enable-nsenter; make
+#- docker cp nsenter:/util-linux/nsenter /usr/local/bin/
+#- docker cp nsenter:/util-linux/bash-completion/nsenter /etc/bash_completion.d/nsenter
 - docker build -t kvenkata986/welcome images/helm-meetup/.
 
 script:
@@ -50,7 +50,7 @@ after_success:
 # Wait for kube-dns to be ready.
 - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n kube-system get pods -lk8s-app=kube-dns -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for kube-dns to be available"; kubectl get pods --all-namespaces; done
 - kubectl get nodes
-- sudo apt-get install util-linux 
+- sudo apt-get install --upgrade util-linux 
 - wget https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-linux-amd64.tar.gz 
 - tar -xvzf helm-v2.10.0-linux-amd64.tar.gz
 - sudo mv linux-amd64/helm /usr/local/bin/helm
