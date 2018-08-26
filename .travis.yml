@@ -9,7 +9,7 @@ env:
 before_install:
 - docker run -d --name nsenter ubuntu:14.04
 - sleep 30
-- docker ps
+- docker ps -a
 - docker exec -d nsenter /usr/bin/apt-get update
 - docker exec -d nsenter /usr/bin/apt-get install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf a$
 - docker exec -d nsenter /usr/bin/git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
