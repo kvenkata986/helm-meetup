@@ -1,0 +1,22 @@
+# Yaml file to create deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myfirst-deployment
+  labels:
+    app: simple-web
+spec:
+  replicas: {{ .Values.replica }}
+  selector:
+    matchLabels:
+      app: simple-web
+  template:
+    metadata:
+      labels:
+        app: simple-web
+    spec:
+      containers:
+      - name: myfirst-container
+        image: kvenkata986/welcome:{{ .Values.version }}
+        ports:
+        - containerPort: 80

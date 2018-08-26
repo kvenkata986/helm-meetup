@@ -42,7 +42,7 @@ after_success:
 - helm init --service-account helm
 - sleep 25
 - kubectl get po --namespace kube-system
-- cd helm
+- cd helm-travis
 - helm install . --name my-first-helm-chart
 - helm list
 
