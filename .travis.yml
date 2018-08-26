@@ -11,10 +11,15 @@ before_install:
 - sleep 15
 - docker ps -a
 - docker exec -d -t nsenter sudo apt-get update
+- docker ps -a
 - sleep 15
+- docker ps -a
 - docker exec -d -t nsenter sudo apt-get install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf a$
+- docker ps -a
 - sleep 15
+- docker ps -a
 - docker exec -d -t nsenter git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
+- docker ps -a
 - docker exec -d -t nsenter cd util-linux/; ./autogen.sh; ./configure --without-python --disable-all-programs --enable-nsenter; make
 - docker cp nsenter:/util-linux/nsenter /usr/local/bin/
 - docker cp nsenter:/util-linux/bash-completion/nsenter /etc/bash_completion.d/nsenter
