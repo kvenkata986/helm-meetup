@@ -8,10 +8,12 @@ env:
 
 before_install:
 - docker run -d -t --name nsenter ubuntu:14.04
-- sleep 30
+- sleep 15
 - docker ps -a
 - docker exec -d nsenter /usr/bin/apt-get update
+- sleep 15
 - docker exec -d nsenter /usr/bin/apt-get install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf a$
+- sleep 15
 - docker exec -d nsenter /usr/bin/git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
 - docker exec -d nsenter cd util-linux/; ./autogen.sh; ./configure --without-python --disable-all-programs --enable-nsenter; make
 - docker cp nsenter:/util-linux/nsenter /usr/local/bin/
