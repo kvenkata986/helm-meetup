@@ -43,10 +43,10 @@ after_success:
 - helm init --service-account helm
 - docker run --name nsenter -it ubuntu:14.04 bash
 - sleep 10
-- docker exec -it /usr/bin/apt-get update
-- docker exec -it /usr/bin/apt-get install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf autoconf automake autopoint libtool   
-- docker exec -it /usr/bin/git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
-- docker exec -it cd util-linux/; ./autogen.sh; ./configure --without-python --disable-all-programs --enable-nsenter; make
+- docker exec -d /usr/bin/apt-get update
+- docker exec -d /usr/bin/apt-get install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf autoconf automake autopoint libtool   
+- docker exec -d /usr/bin/git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
+- docker exec -d cd util-linux/; ./autogen.sh; ./configure --without-python --disable-all-programs --enable-nsenter; make
 - docker cp nsenter:/util-linux/nsenter /usr/local/bin/
 - docker cp nsenter:/util-linux/bash-completion/nsenter /etc/bash_completion.d/nsenter
 - kubectl get po --namespace kube-system
