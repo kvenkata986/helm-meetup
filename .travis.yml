@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 sudo: required
 services:
 - docker
@@ -7,6 +7,7 @@ env:
 - CHANGE_MINIKUBE_NONE_USER=true
 
 before_install:
+- uname -a
 - docker run -d -t --name nsenter ubuntu:14.04
 - sleep 15
 - docker ps -a
