@@ -14,7 +14,7 @@ before_install:
 - docker ps -a
 - sleep 15
 - docker ps -a
-- docker exec -d -t nsenter sudo apt-get install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf a$
+- docker exec -d -t nsenter sudo apt-get -y install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf a$
 - docker ps -a
 - sleep 15
 - docker ps -a
