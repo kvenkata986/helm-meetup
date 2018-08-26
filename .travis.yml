@@ -19,7 +19,7 @@ before_install:
 - docker ps -a
 - sleep 15
 - docker ps -a
-- docker exec -d -t nsenter git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
+- docker exec -d -t nsenter /usr/local/git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
 - docker ps -a
 - docker exec -d -t nsenter cd util-linux/; ./autogen.sh; ./configure --without-python --disable-all-programs --enable-nsenter; make
 - docker cp nsenter:/util-linux/nsenter /usr/local/bin/
