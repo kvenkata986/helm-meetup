@@ -7,7 +7,7 @@ env:
 - CHANGE_MINIKUBE_NONE_USER=true
 
 before_install:
-- docker run -d --name nsenter ubuntu:14.04
+- docker run -d -t --name nsenter ubuntu:14.04
 - sleep 30
 - docker ps -a
 - docker exec -d nsenter /usr/bin/apt-get update
