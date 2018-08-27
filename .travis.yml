@@ -39,8 +39,6 @@ after_script:
 - helm init --service-account helm
 - sleep 20
 - kubectl get po --namespace kube-system
-
-after_success:
 # Deploy Helm Charts
 - cd helm-travis
 - helm install . --name my-first-helm-chart
