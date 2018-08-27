@@ -7,23 +7,6 @@ env:
 - CHANGE_MINIKUBE_NONE_USER=true
 
 before_install:
-- uname -a
-#- docker run -d -t --name nsenter ubuntu:14.04
-#- sleep 15
-#- docker ps -a
-#- docker exec -d -t nsenter apt-get update
-#- docker ps -a
-#- sleep 15
-#- docker ps -a
-#- docker exec -d -t nsenter apt-get -y install git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf autoconf automake autopoint libtool
-#- docker ps -a
-#- sleep 40
-#- docker ps -a
-#- docker exec -d -t nsenter /usr/bin/git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
-#- docker ps -a
-#- docker exec -d -t nsenter cd util-linux/; ./autogen.sh; ./configure --without-python --disable-all-programs --enable-nsenter; make
-#- docker cp nsenter:/util-linux/nsenter /usr/local/bin/
-#- docker cp nsenter:/util-linux/bash-completion/nsenter /etc/bash_completion.d/nsenter
 - docker build -t kvenkata986/welcome images/helm-meetup/.
 
 script:
@@ -33,34 +16,8 @@ script:
   docker push kvenkata986/welcome;
   fi
 
-script:
-# Download kubectl, which is a requirement for using minikube.
-- curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.9.0/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
-# Download minikube.
-- curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.25.2/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
-- sudo minikube start --vm-driver=none --kubernetes-version=v1.9.0
-# Fix the kubectl context, as it's often stale.
-- minikube update-context
-# Wait for Kubernetes to be up and ready.
-- JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl get nodes -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1; done
 
 after_success:
-- kubectl cluster-info
-# Verify kube-addon-manager.
-# Wait for kube-dns to be ready.
-- JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n kube-system get pods -lk8s-app=kube-dns -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for kube-dns to be available"; kubectl get pods --all-namespaces; done
-- kubectl get nodes
-- sudo apt-get install -y --upgrade util-linux socat 
-- wget https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-linux-amd64.tar.gz 
-- tar -xvzf helm-v2.10.0-linux-amd64.tar.gz
-- sudo mv linux-amd64/helm /usr/local/bin/helm
-- helm init
-- kubectl delete deployment tiller-deploy --namespace=kube-system ; kubectl delete service tiller-deploy --namespace=kube-system ; rm -rf ~/.helm/
-- kubectl create -f helm.yaml
-- helm init --service-account helm
-- sleep 30
-- kubectl get po --namespace kube-system
-- cd helm-travis
-- helm install . --name my-first-helm-chart
-- helm list
-
+  - '../.travis/install_kubernetes.sh'
+  - '../.travis/install_helm.sh'
+  - '../.travis/deploy_helm_charts.sh'
