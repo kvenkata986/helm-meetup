@@ -6,7 +6,7 @@ services:
 env:
 - CHANGE_MINIKUBE_NONE_USER=true
 
-before_install:
+before_script:
 - docker build -t kvenkata986/welcome images/helm-meetup/.
 
 script:
@@ -16,8 +16,7 @@ script:
   docker push kvenkata986/welcome;
   fi
 
-
 after_success:
-  - '.travis/install_kubernetes.sh'
-  - '.travis/install_helm.sh'
-  - '.travis/deploy_helm_charts.sh'
+- './.travis/install_kubernetes.sh'
+- './.travis/install_helm.sh'
+- './.travis/deploy_helm_charts.sh'
