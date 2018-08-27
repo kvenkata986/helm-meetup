@@ -43,3 +43,6 @@ after_script:
 - cd helm-travis
 - helm install . --name my-first-helm-chart
 - helm list
+# Print the HTML File
+- ip=$(kubectl get service | grep myfirst-service | awk '{print $3}'); curl http://$ip:80
+
